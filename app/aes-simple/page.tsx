@@ -13,6 +13,7 @@ export default function AesSimple() {
 
   const handleDeCrypt = () => {
     const cryptAES = new EncriptSimple();
+    if (!decryptIn.current) return;
     const cadena = decryptIn?.current.value ?? '';
     const result = cryptAES.decryptData(cadena);
     setDecrypt(result);
@@ -20,6 +21,7 @@ export default function AesSimple() {
 
   const handleCrypt = () => {
     const cryptAES = new EncriptSimple();
+    if (!crypt.current) return;
     const cadena = crypt?.current.value ?? '';
 
     if (cadena.length == 0) return;

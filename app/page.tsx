@@ -13,6 +13,8 @@ export default function Home() {
 
   const handleDeCrypt = () => {
     const cryptAES = new CryptAES();
+
+    if (!decryptIn.current) return;
     const cadena = decryptIn?.current.value ?? '';
     const result = cryptAES.decryptData256(cadena);
     setDecrypt(result);
@@ -20,6 +22,8 @@ export default function Home() {
 
   const handleCrypt = () => {
     const cryptAES = new CryptAES();
+    if (!crypt.current) return;
+
     const cadena = crypt?.current.value ?? '';
 
     if (cadena.length == 0) return;
