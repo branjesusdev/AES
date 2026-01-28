@@ -2,9 +2,13 @@
 
 import { RefObject, useRef, useState } from 'react';
 
-import { CryptAES } from './encript';
+import { EncriptPersonalize } from '../encript-personalize';
 
-export default function Home() {
+export default function AesPersonalize() {
+
+  const keyref: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
+
+
   const [encrypt, setEncrypt] = useState('');
   const crypt: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
 
@@ -12,38 +16,52 @@ export default function Home() {
   const decryptIn: RefObject<HTMLInputElement> = useRef<HTMLInputElement>(null);
 
   const handleDeCrypt = () => {
-    const cryptAES = new CryptAES();
-
+    const cryptAES = new EncriptPersonalize();
     if (!decryptIn.current) return;
     const cadena = decryptIn?.current.value ?? '';
-    const result = cryptAES.decryptData256(cadena);
+    const keyCadena = keyref?.current?.value ?? '';
+
+    if (cadena.length == 0 || keyCadena.length == 0) return;
+
+    const result = cryptAES.decryptData(cadena, keyCadena);
     setDecrypt(result);
   };
 
   const handleCrypt = () => {
-    const cryptAES = new CryptAES();
+    const cryptAES = new EncriptPersonalize();
     if (!crypt.current) return;
-
     const cadena = crypt?.current.value ?? '';
+    const keyCadena = keyref?.current?.value ?? '';
 
-    if (cadena.length == 0) return;
+    if (cadena.length == 0 || keyCadena.length == 0) return;
 
-    const result = cryptAES.encryptData256(cadena);
+    const result = cryptAES.encryptData(cadena, keyCadena);
     setEncrypt(result);
   };
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <h1 className="text-2xl text-cyan-300">AES 256 By Date</h1>
+      <h1 className="text-2xl text-yellow-300">AES Simple</h1>
 
       <a
-        href="/aes-simple"
+        href="/"
         className="py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
       >
-        AES Simple By IV 
+        Decrypt por llave
       </a>
 
-      <div className="flex flex-col gap-5 border p-5 rounded-2xl min-w-[20rem] border-cyan-300">
+      <div className="flex flex-col gap-5 border p-5 rounded-2xl min-w-[20rem] border-yellow-300">
+        <input
+            ref={keyref}
+            type="text"
+            name="key"
+            id="key"
+            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+            placeholder="Llave"
+          />
+      </div>
+
+      <div className="flex flex-col gap-5 border p-5 rounded-2xl min-w-[20rem] border-yellow-300">
         <div className="">
           <input
             ref={decryptIn}
@@ -64,7 +82,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-5 border p-5 rounded-2xl min-w-[20rem] border-cyan-300">
+      <div className="flex flex-col gap-5 border p-5 rounded-2xl min-w-[20rem] border-yellow-300">
         <div className="">
           <input
             ref={crypt}
